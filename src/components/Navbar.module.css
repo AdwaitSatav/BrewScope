@@ -1,0 +1,93 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+.logo { width: 32px; height: 32px; }
+.brandAccent { color: var(--brand); }
+
+.actions { display: flex; gap: 0.4rem; margin-left: auto; }
+
+.iconButton {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 1.05rem;
+  transition: background 0.15s;
+}
+.iconButton:hover { background: var(--surface-2); }
+
+/* Mobile: links live in a drop-down panel */
+.links {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+.links.open { display: flex; }
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+}
+.link:hover { background: var(--surface-2); color: var(--text); }
+.active, .active:hover { background: var(--brand); color: var(--on-brand); }
+.icon { font-size: 0.95rem; }
+
+/* Desktop: links sit in the bar */
+@media (min-width: 900px) {
+  .inner { padding: 0.75rem 1.5rem; }
+  .links {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    padding: 0;
+    margin-left: auto;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  .actions { margin-left: 0.5rem; }
+  .link { padding: 0.45rem 0.85rem; }
+  .menuButton { display: none; }
+}

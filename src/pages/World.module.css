@@ -1,0 +1,53 @@
+.hero {
+  padding: 1.5rem 0 1rem;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+.title {
+  font-size: clamp(2rem, 6vw, 3.6rem);
+  margin-top: 0.75rem;
+  letter-spacing: -0.03em;
+}
+.highlight {
+  background: linear-gradient(90deg, var(--brand), #ef4444);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.subtitle { color: var(--text-muted); max-width: 62ch; margin-top: 1rem; font-size: 1.05rem; }
+.ctas { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+
+.sectionTitle { font-size: 1.35rem; margin-bottom: 1rem; }
+
+.countries {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+}
+.country {
+  display: grid;
+  gap: 0.15rem;
+  padding: 1rem 1.1rem;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+.country:hover { transform: translateY(-3px); border-color: var(--brand); box-shadow: var(--shadow-lg); }
+.code {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 8px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  margin-bottom: 0.5rem;
+}
+.countryName { font-weight: 700; font-family: var(--font-display); font-size: 1.05rem; }
+.count { color: var(--brand); font-weight: 600; font-size: 0.9rem; }
+.continent { color: var(--text-muted); font-size: 0.8rem; }

@@ -1,0 +1,154 @@
+/*
+  BrewScope design tokens. Every component must use these variables
+  so light and dark mode work everywhere automatically.
+*/
+:root,
+[data-theme='light'] {
+  --bg: #faf7f2;
+  --bg-accent: radial-gradient(circle at 15% -10%, #fde9c4 0%, transparent 45%),
+    radial-gradient(circle at 100% 0%, #e0ecff 0%, transparent 40%);
+  --surface: #ffffff;
+  --surface-2: #f4efe7;
+  --text: #1c1917;
+  --text-muted: #78716c;
+  --border: #e7e0d5;
+
+  --brand: #d97706;        /* amber: the BrewScope colour */
+  --brand-strong: #b45309;
+  --brand-soft: #fef3c7;
+  --on-brand: #ffffff;
+  --link: #2563eb;
+
+  --success: #16a34a;
+  --warning: #f59e0b;
+  --danger: #dc2626;
+
+  /* Brewery type colours (used by badges, charts and map pins) */
+  --type-micro: #f59e0b;
+  --type-brewpub: #ef4444;
+  --type-nano: #a855f7;
+  --type-regional: #3b82f6;
+  --type-large: #0ea5e9;
+  --type-bar: #ec4899;
+  --type-taproom: #14b8a6;
+  --type-contract: #84cc16;
+  --type-proprietor: #f97316;
+  --type-planning: #94a3b8;
+  --type-closed: #64748b;
+  --type-other: #a8a29e;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgba(28, 25, 23, 0.04), 0 4px 16px rgba(28, 25, 23, 0.06);
+  --shadow-lg: 0 10px 40px rgba(28, 25, 23, 0.12);
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Space Grotesk', var(--font);
+  --max-width: 1240px;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0f0d0a;
+  --bg-accent: radial-gradient(circle at 15% -10%, rgba(217, 119, 6, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.12) 0%, transparent 40%);
+  --surface: #1a1712;
+  --surface-2: #24201a;
+  --text: #f5f0e8;
+  --text-muted: #a8a29e;
+  --border: #332d24;
+
+  --brand: #f59e0b;
+  --brand-strong: #fbbf24;
+  --brand-soft: rgba(245, 158, 11, 0.14);
+  --on-brand: #1c1408;
+  --link: #60a5fa;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  min-height: 100vh;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  background-image: var(--bg-accent);
+  background-attachment: fixed;
+  line-height: 1.5;
+  transition: background-color 0.25s, color 0.25s;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; }
+input, select { font: inherit; color: inherit; }
+img { max-width: 100%; display: block; }
+
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px; }
+
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; letter-spacing: -0.01em; }
+
+/* ---------- Shared building blocks (reuse these in every part) ---------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.25rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+
+.stack { display: flex; flex-direction: column; gap: 1rem; }
+
+.muted { color: var(--text-muted); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--brand);
+  color: var(--on-brand);
+  font-weight: 600;
+  transition: transform 0.15s, background 0.15s;
+}
+.btn:hover { background: var(--brand-strong); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-ghost:hover { background: var(--surface-2); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+/* Loading shimmer for skeleton placeholders */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 50%, var(--surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
