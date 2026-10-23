@@ -173,3 +173,6 @@ h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; letter-spacing:
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+.tiles-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9);
+}
