@@ -9,6 +9,7 @@ import BarRankChart from '../components/BarRankChart.jsx'
 import TypeDonutChart from '../components/TypeDonutChart.jsx'
 import WorldBubbleMap from '../components/WorldBubbleMap.jsx'
 import RouletteButton from '../components/RouletteButton.jsx'
+import BeerIllustration from '../components/BeerIllustration.jsx'
 import { describeType, findCountryByName, percentOf, sortedEntries, topEntry } from '../utils/atlas.js'
 import styles from './World.module.css'
 import atlas from './Atlas.module.css'
@@ -42,29 +43,32 @@ export default function World() {
   return (
     <div className={`stack ${atlas.page}`}>
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>World Brewery Atlas</p>
-        <h1 className={styles.title}>
-          Explore <span className={styles.highlight}>{total.toLocaleString()}+</span> breweries
-          <br />
-          across {countryCount} countries.
-        </h1>
-        <p className={styles.subtitle}>
-          Search breweries anywhere, drill down from the world to a single taproom, plan a brew trail and collect
-          stamps in your Brew Passport. All powered by live data from Open Brewery DB.
-        </p>
-        <form className={heroSearch.form} role="search" onSubmit={(event) => {
-          event.preventDefault()
-          const query = new FormData(event.currentTarget).get('query').trim()
-          navigate(query ? `/explore?${new URLSearchParams({ q: query })}` : '/explore')
-        }}>
-          <label htmlFor="world-search">Where will you explore?</label>
-          <div><input id="world-search" name="query" type="search" placeholder="Search a city or brewery" /><button className="btn" type="submit">Search</button></div>
-        </form>
-        <div className={styles.ctas}>
-          <Link to="/explore" className="btn">🔍 Start exploring</Link>
-          <Link to="/trail" className="btn btn-ghost">🧭 Plan a trail</Link>
-          <RouletteButton />
+        <div className={styles.heroText}>
+          <p className={styles.eyebrow}>World Brewery Atlas</p>
+          <h1 className={styles.title}>
+            Explore <span className={styles.highlight}>{total.toLocaleString()}+</span> breweries
+            <br />
+            across {countryCount} countries.
+          </h1>
+          <p className={styles.subtitle}>
+            Search breweries anywhere, drill down from the world to a single taproom, plan a brew trail and collect
+            stamps in your Brew Passport. All powered by live data from Open Brewery DB.
+          </p>
+          <form className={heroSearch.form} role="search" onSubmit={(event) => {
+            event.preventDefault()
+            const query = new FormData(event.currentTarget).get('query').trim()
+            navigate(query ? `/explore?${new URLSearchParams({ q: query })}` : '/explore')
+          }}>
+            <label htmlFor="world-search">Where will you explore?</label>
+            <div><input id="world-search" name="query" type="search" placeholder="Search a city or brewery" /><button className="btn" type="submit">Search</button></div>
+          </form>
+          <div className={styles.ctas}>
+            <Link to="/explore" className="btn">🔍 Start exploring</Link>
+            <Link to="/trail" className="btn btn-ghost">🧭 Plan a trail</Link>
+            <RouletteButton />
+          </div>
         </div>
+        <BeerIllustration />
       </section>
 
       <section className={atlas.stats} aria-label="World statistics" aria-busy={meta.loading}>
