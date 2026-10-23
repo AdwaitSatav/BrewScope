@@ -1,0 +1,10 @@
+﻿.card { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: .7rem; min-width: 0; overflow-wrap: anywhere; transition: transform .2s, border-color .2s, box-shadow .2s; }
+.card:hover, .card:focus-within { transform: translateY(-3px); border-color: var(--brand); box-shadow: var(--shadow-lg); }
+.card h3 { font-size: 1.15rem; }
+.details::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); }
+.details:focus-visible::after { outline: 2px solid var(--brand); outline-offset: 3px; }
+.address { font-size: .85rem; color: var(--text-muted); }
+.links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: auto; }
+.links a { position: relative; z-index: 1; color: var(--link); font-size: .85rem; }
+.links a:hover { text-decoration: underline; }
+.more { color: var(--brand-strong); font-size: .8rem; font-weight: 600; padding-top: .5rem; }

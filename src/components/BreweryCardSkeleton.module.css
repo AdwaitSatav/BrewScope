@@ -1,0 +1,5 @@
+﻿.card { display: grid; gap: 1rem; min-height: 270px; }
+.card > div { height: 1rem; }
+.card .badge { width: 30%; height: 1.4rem; }
+.card .title { height: 1.7rem; width: 85%; }
+.card .short { width: 60%; }
