@@ -1,0 +1,70 @@
+.wrap { position: relative; width: 100%; max-width: 420px; margin-inline: auto; }
+.glow {
+  position: absolute;
+  inset: 12% 8% 6%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--brand) 35%, transparent) 0%, transparent 70%);
+  filter: blur(24px);
+}
+.art { position: relative; display: block; width: 100%; height: auto; overflow: visible; }
+
+.shadow { fill: var(--text); opacity: 0.08; }
+
+/* Bottle */
+.bottle { animation: sway 6s ease-in-out infinite; transform-origin: 96px 302px; }
+.cap { fill: var(--brand-strong); }
+.capRidges { stroke: rgba(0, 0, 0, 0.25); stroke-width: 1.5; }
+.label { fill: #fef3c7; stroke: #d97706; stroke-width: 2; }
+.labelTitle { font-family: var(--font-display); font-weight: 700; font-size: 17px; fill: #7c2d12; letter-spacing: 0.08em; }
+.labelSub { font-family: var(--font); font-weight: 600; font-size: 7.5px; fill: #b45309; letter-spacing: 0.12em; }
+.shine { fill: #ffffff; opacity: 0.28; }
+
+/* Mug */
+.mug { animation: cheers 6s ease-in-out infinite; transform-origin: 220px 302px; }
+.glass {
+  fill: color-mix(in srgb, var(--surface) 55%, transparent);
+  stroke: color-mix(in srgb, var(--text) 22%, transparent);
+  stroke-width: 3;
+}
+.handle {
+  fill: none;
+  stroke: color-mix(in srgb, var(--text) 22%, transparent);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+.ribs { stroke: #ffffff; stroke-width: 2; opacity: 0.18; }
+.foam { fill: #fffbf0; stroke: #f3e3c3; stroke-width: 1.5; }
+.bubble { fill: #fff7e0; opacity: 0; animation: rise 3s ease-in infinite; }
+
+/* Decorations */
+.hopDark { fill: #65a30d; }
+.hopLight { fill: #a3e635; }
+.hopStem { fill: none; stroke: #4d7c0f; stroke-width: 2.5; stroke-linecap: round; }
+.floatSlow { animation: float 7s ease-in-out infinite; }
+.floatFast { animation: float 5s ease-in-out infinite reverse; }
+.sparkle { fill: var(--brand); animation: twinkle 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.sparkleLate { animation-delay: 1.2s; }
+
+@keyframes rise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translateY(-150px); opacity: 0; }
+}
+@keyframes cheers {
+  0%, 70%, 100% { transform: rotate(0deg); }
+  80% { transform: rotate(-4deg); }
+  90% { transform: rotate(1.5deg); }
+}
+@keyframes sway {
+  0%, 70%, 100% { transform: rotate(0deg); }
+  80% { transform: rotate(3deg); }
+  90% { transform: rotate(-1deg); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(6deg); }
+}
+@keyframes twinkle {
+  0%, 100% { transform: scale(0.6); opacity: 0.4; }
+  50% { transform: scale(1); opacity: 1; }
+}
