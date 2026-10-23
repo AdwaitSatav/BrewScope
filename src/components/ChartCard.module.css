@@ -1,0 +1,6 @@
+.card { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.header h2 { font-size: 1.15rem; }
+.header p { font-size: .85rem; margin-top: .2rem; }
+.body { min-width: 0; }
+.skeleton { height: 260px; }
+.summary { font-size: .9rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: .75rem; }

@@ -1,0 +1,7 @@
+.chart { width: 100%; min-width: 0; }
+.bar { cursor: pointer; outline: none; }
+.bar rect { transition: opacity .15s; }
+.bar:hover rect { opacity: .8; }
+.bar:focus-visible rect { stroke: var(--text); stroke-width: 2px; }
+.tooltip { display: grid; gap: .1rem; padding: .5rem .7rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); font-size: .85rem; }
+.tooltip span { color: var(--text-muted); }

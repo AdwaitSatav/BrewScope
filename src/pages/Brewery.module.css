@@ -1,0 +1,19 @@
+.subtitle { display: inline-flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 1rem; align-items: start; }
+.mapSkeleton { height: 300px; }
+.details, .mapCard { display: grid; gap: 1rem; min-width: 0; overflow-wrap: anywhere; }
+.details h2, .mapCard h2 { font-size: 1.15rem; }
+.details dl { display: grid; gap: .75rem; }
+.details dl > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: .75rem; padding-bottom: .75rem; border-bottom: 1px solid var(--border); }
+.details dt { color: var(--text-muted); font-size: .85rem; font-weight: 600; }
+.details address { display: grid; font-style: normal; }
+.details dd a { color: var(--link); }
+.details dd a:hover { text-decoration: underline; }
+.mapCard p { font-size: .85rem; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.actions p { font-size: .8rem; width: 100%; }
+.actions :global(.btn):disabled { opacity: .55; cursor: not-allowed; transform: none; }
+.actions :global(.btn):disabled:hover { background: var(--brand); }
+.actions :global(.btn-ghost):disabled:hover { background: transparent; }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .details dl > div { grid-template-columns: minmax(0, 1fr); gap: .2rem; } }

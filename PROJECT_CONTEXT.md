@@ -8,10 +8,10 @@
 > **Research:** How do useState and useEffect work together for data fetching? Why use components and props? How do you handle loading, errors and empty states?
 > **API:** Open Brewery DB · **Docs:** React
 
-**Rule: the ONLY data API is Open Brewery DB.** Map tiles from OpenStreetMap are allowed (they are images, not data). No other data APIs, no API keys, no backend.
+**Rule: the ONLY data API is Open Brewery DB.** Map tiles from OpenStreetMap (light) and CARTO (dark) are allowed (they are images, not data). No other data APIs, no API keys, no backend.
 
 ## 2. The concept: BrewScope, a World Brewery Atlas
-A dashboard that turns Open Brewery DB's ~11,000 breweries in 16 countries into something you can **explore on a map, plan a trip with, and collect like a game**.
+A dashboard that turns Open Brewery DB's ~11,959 breweries in 23 countries into something you can **explore on a map, plan a trip with, and collect like a game**.
 
 | Feature | What it does | Part |
 |---|---|---|
@@ -44,12 +44,12 @@ Base URL: `https://api.openbrewerydb.org/v1`
 | `GET /breweries/meta?by_country=germany` | **Counts:** `{ total, by_state, by_type, by_country }`. Use for stats and charts without downloading every brewery. Accepts the same filters. |
 
 Brewery object fields: `id, name, brewery_type, address_1, city, state_province, postal_code, country, longitude, latitude, phone, website_url, state, street`.
-Notes (verified Oct 2026): no key; localhost CORS works. `per_page` must be clamped to 1–200; larger values return HTML. The autocomplete endpoint is broken (HTML redirect); use search for suggestions. Reject non-JSON responses. Coordinates may be numbers, strings or null; normalize to Number or null. Address, phone, website and state_province can be null. Empty strings normalize to null, and location joins city/state/country without duplicates. State spelling can vary.
+Notes (verified Oct 2026): world meta = 11,959 breweries in 23 countries. Meta counts are numbers keyed by display names (by_country `"New Zealand"`, by_state `"Baden-Württemberg"`); pass region names exactly (URL-encoded) to by_state, spaces/accents work. by_type also includes `beergarden` and `cidery`. by_dist results can include the brewery itself (exclude by id). ~98% of records have coordinates. no key; localhost CORS works. `per_page` must be clamped to 1–200; larger values return HTML. The autocomplete endpoint is broken (HTML redirect); use search for suggestions. Reject non-JSON responses. Coordinates may be numbers, strings or null; normalize to Number or null. Address, phone, website and state_province can be null. Empty strings normalize to null, and location joins city/state/country without duplicates. State spelling can vary.
 
 ## 4. Tech stack
 - Vite + React 18, React Router v6, CSS Modules
-- Recharts (charts, added in Part 3)
-- Leaflet + react-leaflet with OpenStreetMap tiles (maps, added in Part 3)
+- Recharts 2 (`recharts@^2.15.4`, charts, added in Part 3)
+- Leaflet 1.9 + react-leaflet 4 (`leaflet@^1.9.4`, `react-leaflet@^4.2.1`; v5 needs React 19) with OpenStreetMap / CARTO dark tiles (maps, added in Part 3)
 - localStorage for theme, trail, passport and favourites
 - GitHub (protected `main`, PRs) + Vercel (auto-deploy from `main`)
 
@@ -64,7 +64,10 @@ brewscope/
     main.jsx            # BrowserRouter + ThemeProvider
     App.jsx             # all routes
     index.css           # DESIGN TOKENS + shared classes (.card .grid .stack .btn .btn-ghost .badge .skeleton .muted)
-    constants/breweryTypes.js  # BREWERY_TYPES (label + colour), getTypeInfo(), COUNTRIES list
+    constants/breweryTypes.js  # BREWERY_TYPES (13 types, label + colour), getTypeInfo(), COUNTRIES (23, with center + zoom)
+    api/breweries.js    # Part 2: all Open Brewery DB requests
+    hooks/              # useFetch, useDebounce (Part 2), useThemeColors (Part 3)
+    utils/atlas.js      # Part 3: pure helpers for the Atlas pages
     context/ThemeContext.jsx   # ThemeProvider, useTheme()  { theme, toggleTheme }
     components/
       Layout.jsx        # Navbar + <Outlet/> + Footer, scroll-to-top
@@ -73,21 +76,23 @@ brewscope/
       PageHeader.jsx    # <PageHeader eyebrow title subtitle actions/>  use on every page
       ComingSoon.jsx    # placeholder; delete usages as features land
     pages/
-      World.jsx         # /                       (hero + country grid; Part 3 adds map/stats/charts)
+      World.jsx         # /                       (hero, live stats, bubble map, charts, country grid)
+      Atlas.module.css  # shared layout for World / Country / Brewery
       Explore.jsx       # /explore                (Part 2)
       Country.jsx       # /country/:country[/:region] (Part 3)
-      Brewery.jsx       # /brewery/:id            (Part 3)
+      Brewery.jsx       # /brewery/:id            (Part 3) + Brewery.module.css
       Compare.jsx       # /compare                (Part 4)
       Trail.jsx         # /trail                  (Part 4)
       Passport.jsx      # /passport               (Part 4)
       About.jsx         # /about                  (Part 4 completes)
       NotFound.jsx
 ```
-Planned folders: `src/api/` (Part 2), `src/hooks/` (Part 2), `src/utils/` (Parts 2–4), `src/context/` for Trail/Passport (Part 4).
+Planned folders: `src/context/` for Trail/Passport (Part 4); `src/utils/` can take more helpers.
 
 ## 6. Conventions (every part must follow)
 - Functional components + hooks. One component per file. Component styles in `Name.module.css`.
-- **Only use CSS variables from `index.css`** (`--surface`, `--surface-2`, `--text`, `--text-muted`, `--border`, `--brand`, `--brand-soft`, `--on-brand`, `--link`, `--success`, `--warning`, `--danger`, `--type-*`, `--radius`, `--shadow`). Never hard-code colours, so dark mode keeps working.
+- **Only use CSS variables from `index.css`** (`--surface`, `--surface-2`, `--text`, `--text-muted`, `--border`, `--brand`, `--brand-soft`, `--on-brand`, `--link`, `--success`, `--warning`, `--danger`, `--type-*`, `--radius`, `--shadow`). Never hard-code colours, so dark mode keeps working. When JavaScript needs a real colour (Recharts, Leaflet), use `useThemeColors()`.
+- Global classes (`.btn`, `.card`…) inside a CSS Module must be written `:global(.btn)`.
 - Brewery type colours/labels come from `constants/breweryTypes.js`.
 - Every page starts with `<PageHeader />`.
 - Fetch logic lives in `src/api/` and hooks; components receive data via props. Don't fetch the same thing twice.
@@ -104,11 +109,11 @@ Planned folders: `src/api/` (Part 2), `src/hooks/` (Part 2), `src/utils/` (Parts
 ## 8. Progress
 - [x] **Part 1 (Person 1): Foundation.** Vite, routing (9 routes), Layout, Navbar with mobile menu + theme toggle, Footer, PageHeader, ComingSoon, design tokens (light + dark), brewery type constants, country list, World hero + country grid, vercel.json.
 - [x] **Part 2 (Person 2 — Ryan): Explore (meets the brief by itself).** `src/api/breweries.js`, `useFetch`, `useDebounce`, search with autocomplete, BreweryCard, filters, StatCards, loading/error/empty states, pagination or "load more".
-- [ ] **Part 3 (Person 3): Atlas.** Recharts + Leaflet. Live World view (map bubbles, world stats via meta, charts), Country/Region drill-down with breadcrumbs, Brewery details page with mini map + nearby.
+- [x] **Part 3 (Person 3 — Arham): Atlas.** Recharts + Leaflet. Live World view (bubble map, world stats via meta, top-countries bar chart, types donut), Country/Region drill-down with breadcrumbs, Brewery details page with mini map + nearby. See section 11.
 - [ ] **Part 4 (Person 4): Unique features + delivery.** Compare, Brew Trail (nearest-neighbour + Haversine), Passport + badges, Roulette, About (team + research), README with **Research section**, GitHub Actions CI, screenshots.
 
 ## 9. Next task
-**Part 3 (Person 3): Atlas.** Reuse the API, hooks, cards, badges, stats and states below; add charts, maps and brewery details. The chart requirement remains assigned to Part 3.
+**Part 4 (Person 4): Unique features + delivery.** Compare, Brew Trail, Passport + badges, Roulette, About, README Research section, CI, screenshots. Reuse the Part 3 pieces in section 11: `TypeDonutChart`/`BarRankChart`/`ChartCard` for Compare, `BreweryMap` for the Trail map (add the route as a Polyline child or new component), and wire up the two disabled buttons on `Brewery.jsx` ("Add to Trail", "Mark as visited").
 
 ## 10. Part 2 handoff: files and reusable interfaces
 
@@ -146,3 +151,35 @@ No packages added. Existing Part 1 files changed only: Explore.jsx, World.jsx (h
 - Pagination resets when query/filter inputs change. Search filters only cover loaded API pages; Load more remains available after full raw pages even with zero visible matches. Stats show visible count, most common type, website percentage, and distinct countries or states/regions.
 - World.jsx: compact accessible hero search added; rest of page retained. Details/country pages remain Part 3 placeholders.
 - Part 2 provides search/cards/API/loading/error/empty requirements. Charts remain Part 3 work, using getBreweryMeta.
+
+## 11. Part 3 handoff: Atlas files and reusable interfaces
+
+Packages added: `recharts@^2.15.4`, `leaflet@^1.9.4`, `react-leaflet@^4.2.1`. Part 1/2 files changed: World.jsx, Country.jsx, Brewery.jsx, breweryTypes.js, index.css, this document. Explore and its components were not touched.
+
+### Data and tokens
+- `constants/breweryTypes.js`: added `beergarden` (Beer garden) and `cidery` (Cidery). Added Belgium, New Zealand, South Africa, Netherlands, Finland, Italy, Ukraine. Every country now has `center: [lat, lng]` and `zoom` for map framing. Approx counts sum to 11,959.
+- `index.css`: `--type-beergarden`, `--type-cidery` (lighter shades in dark mode); Leaflet theme overrides (popups, tooltips, zoom buttons, attribution use tokens; `.leaflet-container { z-index: 0 }` keeps maps under the sticky navbar).
+
+### Hook and helpers
+- `hooks/useThemeColors.js`: default `useThemeColors()` returns `{ theme, resolve, text, textMuted, border, surface, surface2, brand, brandStrong, link }` as real colour strings read with getComputedStyle. `resolve('var(--type-micro)')` turns a token into its current value. Re-reads one animation frame after `useTheme().theme` changes (ThemeProvider sets data-theme in its own effect, after child effects).
+- `utils/atlas.js`: `sortedEntries(counts)`, `topEntry(counts)`, `findCountryByName(apiName)`, `regionPath(countrySlug, region)` (URL-encodes the exact region name), `safeDecode(value)`, `percentOf(part, total)`, `describeType(type)` (plural sentence name, e.g. "brewpubs").
+
+### Components (src/components/, each with a .module.css unless it renders no markup)
+- `ChartCard.jsx`: `{ title, subtitle, loading, error, onRetry, isEmpty, emptyMessage, summary, children }`. `.card` with header; skeleton while loading, `ErrorState` (with retry) on error, `EmptyState` when empty, else children plus the optional one-line text `summary`. Used for every chart and the maps.
+- `TypeDonutChart.jsx`: `{ byType }` (meta by_type object). Recharts donut, colours from BREWERY_TYPES via useThemeColors, centre total, tooltip with count and %, HTML legend, `role="img"` with a full text aria-label.
+- `BarRankChart.jsx`: `{ data: [{ label, value, key }], onSelect(key, item), valueLabel = 'breweries' }`. Horizontal bars (pass data already sorted and sliced). Each bar is an SVG `role="button"` with tabIndex: click or Enter/Space calls onSelect. Tooltip, value labels, responsive width.
+- `BreweryMap.jsx`: `{ breweries, center, zoom, height = 420, highlightId, onSelect(brewery), label }`. CircleMarker per brewery coloured by type (records without coordinates skipped); popup with name, TypeBadge, location, details link. No center → fits bounds to the pins. Highlighted pin is bigger, outlined and drawn on top. Imports `leaflet/dist/leaflet.css`.
+- `WorldBubbleMap.jsx`: `{ countries: [{ name, slug, center, total }] }`. One bubble per country, radius `5 + 31 * sqrt(total / max)`, tooltip with name + count, click → `/country/:slug`.
+- `Breadcrumbs.jsx`: `{ items: [{ label, to }] }`; ordered list in `nav[aria-label=Breadcrumb]`, last item is `aria-current="page"`.
+- `ThemedTileLayer.jsx` (no props, no CSS): OSM tiles in light mode, CARTO dark tiles in dark mode, correct attribution; remounts on theme change.
+- `MapViewController.jsx` (`{ center, zoom, points }`, renders nothing, must be inside MapContainer): setView/fitBounds when inputs change; scroll-wheel zoom enabled only after a click on the map, disabled on mouseout/blur.
+
+### Pages
+- `World.jsx`: one `getBreweryMeta({})` via useFetch. Live hero numbers (static fallback while loading), 4 StatCards, WorldBubbleMap, "Top countries" (top 10, click → country) and "Brewery types worldwide" donut, country grid sorted by live count (falls back to `~approx`).
+- `Country.jsx`: `/country/:country[/:region]`. Two independent useFetch calls (deps `[country, region]`): meta with by_country (+ by_state) for stats/charts, and `listBreweries(..., { perPage: 200 })` for map + cards, so each section has its own loading/error/retry. Country view: regions bar chart (top 15, click → region) + donut; region view: donut + "Back to {country}". Map framed by `COUNTRIES.center/zoom` (country) or fit to pins (region), "Showing up to 200" note. 24 cards + "Show more" (24 more from loaded data, no requests). Unknown slug → "Country not found"; total 0 → friendly EmptyState.
+- `Brewery.jsx`: getBrewery(id); breadcrumbs World › Country › Region › Brewery (country found by name); details card (address, tel: phone, validated http(s) website with rel="noreferrer", coordinates); 300px BreweryMap with the brewery highlighted plus nearby pins; "Nearby breweries" via `listBreweries({ by_dist }, { perPage: 7 })` minus the current id (max 6), hidden without coordinates; disabled "Add to Trail" / "Mark as visited" buttons ("Coming in Part 4"). 404 → "Brewery not found" + Explore link; other errors → ErrorState with retry.
+
+### Notes
+- Leaflet's default Marker icons break under Vite (image paths), so always use CircleMarker or a divIcon.
+- Production build is ~760 kB JS (Recharts + Leaflet), so Vite prints the "chunk larger than 500 kB" warning; it is harmless. Part 4 could lazy-load pages with `React.lazy` if wanted.
+

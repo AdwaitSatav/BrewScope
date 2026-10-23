@@ -1,0 +1,12 @@
+/* Shared page layout for the Atlas pages (World, Country, Brewery). */
+.page { gap: 1.5rem; min-width: 0; }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.sectionHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem; margin-bottom: 1rem; overflow-wrap: anywhere; }
+.sectionHead h2 { font-size: 1.25rem; min-width: 0; }
+.sectionHead p { font-size: .85rem; }
+.more { display: grid; justify-items: center; gap: .5rem; padding-top: 1rem; text-align: center; }
+.more p { font-size: .8rem; }
+@media (max-width: 900px) { .charts { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 800px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 380px) { .stats { grid-template-columns: minmax(0, 1fr); } }

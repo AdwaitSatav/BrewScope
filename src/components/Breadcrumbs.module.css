@@ -1,0 +1,7 @@
+.crumbs { margin-bottom: .75rem; font-size: .9rem; min-width: 0; }
+.crumbs ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: .25rem; }
+.crumbs li { display: inline-flex; align-items: center; gap: .25rem; color: var(--text-muted); overflow-wrap: anywhere; }
+.crumbs li + li::before { content: '›'; color: var(--text-muted); }
+.crumbs a { color: var(--link); border-radius: 4px; transition: color .15s; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs [aria-current='page'] { color: var(--text); font-weight: 600; }
