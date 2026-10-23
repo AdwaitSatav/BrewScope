@@ -1,0 +1,4 @@
+﻿.form { max-width: 32rem; margin-top: 1.25rem; }
+.form label { display: block; margin-bottom: .4rem; font-size: .85rem; font-weight: 600; }
+.form > div { display: flex; gap: .5rem; }
+.form input { min-width: 0; width: 100%; padding: .65rem .8rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }

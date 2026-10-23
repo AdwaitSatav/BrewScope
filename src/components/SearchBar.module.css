@@ -1,0 +1,11 @@
+﻿.root { position: relative; min-width: 0; }
+.label { display: block; font-weight: 600; margin-bottom: .5rem; }
+.row { display: flex; gap: .6rem; }
+.input { width: 100%; min-width: 0; padding: .8rem 1rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); transition: border-color .15s; }
+.input:hover { border-color: var(--brand); }
+.dropdown { position: absolute; top: 100%; left: 0; right: 0; z-index: 20; margin-top: .4rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow-lg); overflow: hidden; }
+.dropdown ul { list-style: none; max-height: 22rem; overflow-y: auto; }
+.dropdown li { display: grid; padding: .7rem 1rem; cursor: pointer; overflow-wrap: anywhere; }
+.dropdown li:hover, .active { background: var(--brand-soft); }
+.dropdown span, .status { font-size: .8rem; }
+.status { padding: .65rem 1rem; color: var(--text-muted); }
