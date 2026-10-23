@@ -8,6 +8,7 @@ import ChartCard from '../components/ChartCard.jsx'
 import BarRankChart from '../components/BarRankChart.jsx'
 import TypeDonutChart from '../components/TypeDonutChart.jsx'
 import WorldBubbleMap from '../components/WorldBubbleMap.jsx'
+import RouletteButton from '../components/RouletteButton.jsx'
 import { describeType, findCountryByName, percentOf, sortedEntries, topEntry } from '../utils/atlas.js'
 import styles from './World.module.css'
 import atlas from './Atlas.module.css'
@@ -62,6 +63,7 @@ export default function World() {
         <div className={styles.ctas}>
           <Link to="/explore" className="btn">🔍 Start exploring</Link>
           <Link to="/trail" className="btn btn-ghost">🧭 Plan a trail</Link>
+          <RouletteButton />
         </div>
       </section>
 

@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader.jsx'
 import SearchBar from '../components/SearchBar.jsx'
 import FilterBar from '../components/FilterBar.jsx'
 import ExploreResults from '../components/ExploreResults.jsx'
+import RouletteButton from '../components/RouletteButton.jsx'
 import { BREWERY_TYPES, COUNTRIES } from '../constants/breweryTypes.js'
 import styles from './Explore.module.css'
 
@@ -22,7 +23,7 @@ export default function Explore() {
   }
   const clear = () => setParams({})
   return <>
-    <PageHeader eyebrow="Explore" title="Find your next great brewery" subtitle="Discover local favourites and faraway taprooms. Your next stop starts here." />
+    <PageHeader eyebrow="Explore" title="Find your next great brewery" subtitle="Discover local favourites and faraway taprooms. Your next stop starts here." actions={<RouletteButton />} />
     <div className={`stack ${styles.content}`}>
       <section className={`card stack ${styles.controls}`} aria-label="Search and filters">
         <SearchBar query={query} onSearch={(value) => change('q', value)} />

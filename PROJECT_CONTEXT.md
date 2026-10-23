@@ -8,7 +8,7 @@
 > **Research:** How do useState and useEffect work together for data fetching? Why use components and props? How do you handle loading, errors and empty states?
 > **API:** Open Brewery DB · **Docs:** React
 
-**Rule: the ONLY data API is Open Brewery DB.** Map tiles from OpenStreetMap (light) and CARTO (dark) are allowed (they are images, not data). No other data APIs, no API keys, no backend.
+**Rule: the ONLY data API is Open Brewery DB.** Map tiles from OpenStreetMap are allowed (they are images, not data): OpenStreetMap tiles in both themes; dark mode darkens them with a CSS filter, no API key. No other data APIs, no API keys, no backend.
 
 ## 2. The concept: BrewScope, a World Brewery Atlas
 A dashboard that turns Open Brewery DB's ~11,959 breweries in 23 countries into something you can **explore on a map, plan a trip with, and collect like a game**.
@@ -49,8 +49,9 @@ Notes (verified Oct 2026): world meta = 11,959 breweries in 23 countries. Meta c
 ## 4. Tech stack
 - Vite + React 18, React Router v6, CSS Modules
 - Recharts 2 (`recharts@^2.15.4`, charts, added in Part 3)
-- Leaflet 1.9 + react-leaflet 4 (`leaflet@^1.9.4`, `react-leaflet@^4.2.1`; v5 needs React 19) with OpenStreetMap / CARTO dark tiles (maps, added in Part 3)
-- localStorage for theme, trail, passport and favourites
+- Leaflet 1.9 + react-leaflet 4 (`leaflet@^1.9.4`, `react-leaflet@^4.2.1`; v5 needs React 19) with OpenStreetMap tiles in both themes; dark mode darkens them with a CSS filter, no API key (maps, added in Part 3)
+- localStorage for theme (`brewscope-theme`), trail (`brewscope-trail`) and passport (`brewscope-visited`)
+- GitHub Actions CI (`.github/workflows/ci.yml`, added in Part 4)
 - GitHub (protected `main`, PRs) + Vercel (auto-deploy from `main`)
 
 ## 5. Folder structure
@@ -61,33 +62,39 @@ brewscope/
   PROJECT_CONTEXT.md    # this file
   public/favicon.svg
   src/
-    main.jsx            # BrowserRouter + ThemeProvider
+    main.jsx            # BrowserRouter + ThemeProvider + CollectionProvider
     App.jsx             # all routes
     index.css           # DESIGN TOKENS + shared classes (.card .grid .stack .btn .btn-ghost .badge .skeleton .muted)
     constants/breweryTypes.js  # BREWERY_TYPES (13 types, label + colour), getTypeInfo(), COUNTRIES (23, with center + zoom)
     api/breweries.js    # Part 2: all Open Brewery DB requests
     hooks/              # useFetch, useDebounce (Part 2), useThemeColors (Part 3)
     utils/atlas.js      # Part 3: pure helpers for the Atlas pages
+    utils/geo.js        # Part 4: haversineKm, planRoute, routeDistance (+ hasCoords, formatKm, formatPlace)
+    utils/badges.js     # Part 4: BADGES, computeBadges, distinctCount
     context/ThemeContext.jsx   # ThemeProvider, useTheme()  { theme, toggleTheme }
+    context/CollectionContext.jsx  # Part 4: CollectionProvider, useCollection()  trail + visited
     components/
       Layout.jsx        # Navbar + <Outlet/> + Footer, scroll-to-top
       Navbar.jsx        # links + theme toggle + mobile menu
       Footer.jsx
       PageHeader.jsx    # <PageHeader eyebrow title subtitle actions/>  use on every page
-      ComingSoon.jsx    # placeholder; delete usages as features land
+      ComingSoon.jsx    # placeholder; no longer used by any page after Part 4
+      TrailMap.jsx      # Part 4: route map (numbered dots + Polyline)
+      RouletteButton.jsx  # Part 4: "Take me somewhere" random brewery
     pages/
       World.jsx         # /                       (hero, live stats, bubble map, charts, country grid)
       Atlas.module.css  # shared layout for World / Country / Brewery
       Explore.jsx       # /explore                (Part 2)
       Country.jsx       # /country/:country[/:region] (Part 3)
       Brewery.jsx       # /brewery/:id            (Part 3) + Brewery.module.css
-      Compare.jsx       # /compare                (Part 4)
-      Trail.jsx         # /trail                  (Part 4)
-      Passport.jsx      # /passport               (Part 4)
-      About.jsx         # /about                  (Part 4 completes)
+      Compare.jsx       # /compare?a=&b=          (Part 4) + Compare.module.css
+      Trail.jsx         # /trail                  (Part 4) + Trail.module.css
+      Passport.jsx      # /passport               (Part 4) + Passport.module.css
+      About.jsx         # /about                  (Part 4) + About.module.css
       NotFound.jsx
+  .github/workflows/ci.yml  # Part 4: GitHub Actions build check (PRs + pushes to main)
+  README.md             # public overview: features, run locally, Brew Trail, Research, credits
 ```
-Planned folders: `src/context/` for Trail/Passport (Part 4); `src/utils/` can take more helpers.
 
 ## 6. Conventions (every part must follow)
 - Functional components + hooks. One component per file. Component styles in `Name.module.css`.
@@ -110,10 +117,18 @@ Planned folders: `src/context/` for Trail/Passport (Part 4); `src/utils/` can ta
 - [x] **Part 1 (Person 1): Foundation.** Vite, routing (9 routes), Layout, Navbar with mobile menu + theme toggle, Footer, PageHeader, ComingSoon, design tokens (light + dark), brewery type constants, country list, World hero + country grid, vercel.json.
 - [x] **Part 2 (Person 2 — Ryan): Explore (meets the brief by itself).** `src/api/breweries.js`, `useFetch`, `useDebounce`, search with autocomplete, BreweryCard, filters, StatCards, loading/error/empty states, pagination or "load more".
 - [x] **Part 3 (Person 3 — Arham): Atlas.** Recharts + Leaflet. Live World view (bubble map, world stats via meta, top-countries bar chart, types donut), Country/Region drill-down with breadcrumbs, Brewery details page with mini map + nearby. See section 11.
-- [ ] **Part 4 (Person 4): Unique features + delivery.** Compare, Brew Trail (nearest-neighbour + Haversine), Passport + badges, Roulette, About (team + research), README with **Research section**, GitHub Actions CI, screenshots.
+- [x] **Part 4 (Person 4 — Yugraj): Unique features + delivery.** Compare, Brew Trail (nearest-neighbour + Haversine), Passport + badges, Roulette, About (team + research), README with **Research section**, GitHub Actions CI, screenshot placeholders. See section 12.
+
+**🎉 The project is complete.** All four parts are merged; the brief (search, cards, chart, API, loading/error/empty states, research answers) is fully covered.
 
 ## 9. Next task
+None: the project is complete. Optional polish only: add real screenshots to `docs/` (world.png, explore.png, country.png, trail.png) for the README, and optionally lazy-load pages with `React.lazy` to remove the >500 kB chunk warning.
+
+<details><summary>Original Part 4 brief (done)</summary>
+
 **Part 4 (Person 4): Unique features + delivery.** Compare, Brew Trail, Passport + badges, Roulette, About, README Research section, CI, screenshots. Reuse the Part 3 pieces in section 11: `TypeDonutChart`/`BarRankChart`/`ChartCard` for Compare, `BreweryMap` for the Trail map (add the route as a Polyline child or new component), and wire up the two disabled buttons on `Brewery.jsx` ("Add to Trail", "Mark as visited").
+
+</details>
 
 ## 10. Part 2 handoff: files and reusable interfaces
 
@@ -171,7 +186,7 @@ Packages added: `recharts@^2.15.4`, `leaflet@^1.9.4`, `react-leaflet@^4.2.1`. Pa
 - `BreweryMap.jsx`: `{ breweries, center, zoom, height = 420, highlightId, onSelect(brewery), label }`. CircleMarker per brewery coloured by type (records without coordinates skipped); popup with name, TypeBadge, location, details link. No center → fits bounds to the pins. Highlighted pin is bigger, outlined and drawn on top. Imports `leaflet/dist/leaflet.css`.
 - `WorldBubbleMap.jsx`: `{ countries: [{ name, slug, center, total }] }`. One bubble per country, radius `5 + 31 * sqrt(total / max)`, tooltip with name + count, click → `/country/:slug`.
 - `Breadcrumbs.jsx`: `{ items: [{ label, to }] }`; ordered list in `nav[aria-label=Breadcrumb]`, last item is `aria-current="page"`.
-- `ThemedTileLayer.jsx` (no props, no CSS): OSM tiles in light mode, CARTO dark tiles in dark mode, correct attribution; remounts on theme change.
+- `ThemedTileLayer.jsx` (no props, no CSS): OpenStreetMap tiles in both themes; dark mode darkens them with a CSS filter (`.tiles-dark` in index.css), no API key; OSM attribution; remounts on theme change.
 - `MapViewController.jsx` (`{ center, zoom, points }`, renders nothing, must be inside MapContainer): setView/fitBounds when inputs change; scroll-wheel zoom enabled only after a click on the map, disabled on mouseout/blur.
 
 ### Pages
@@ -183,3 +198,42 @@ Packages added: `recharts@^2.15.4`, `leaflet@^1.9.4`, `react-leaflet@^4.2.1`. Pa
 - Leaflet's default Marker icons break under Vite (image paths), so always use CircleMarker or a divIcon.
 - Production build is ~760 kB JS (Recharts + Leaflet), so Vite prints the "chunk larger than 500 kB" warning; it is harmless. Part 4 could lazy-load pages with `React.lazy` if wanted.
 
+## 12. Part 4 handoff: Compare, Trail, Passport, Roulette, CI and docs
+
+No packages added. Part 1–3 files changed only where needed: `main.jsx` (CollectionProvider), `Brewery.jsx` (the two buttons + note), `World.jsx` and `Explore.jsx` (RouletteButton placement only), `Navbar.jsx` + `Navbar.module.css` (trail count), `About.jsx`, `README.md`, this file. Every new component/page has its own CSS Module and uses only index.css variables.
+
+### Helpers
+- `utils/geo.js`
+  - `haversineKm(a, b)`: great-circle distance in km between two `{ latitude, longitude }` objects (R = 6371, `2 · atan2(√h, √(1−h))`).
+  - `planRoute(stops)`: nearest-neighbour order. Keeps stops with coordinates, starts at the first one added, then repeatedly goes to the closest unvisited stop. Returns a new ordered array.
+  - `routeDistance(stops)`: total km along the given order (sum of legs).
+  - `hasCoords(point)`, `formatKm(km)` ("3.2 km", "1,235 km"), `formatPlace(stop)` (city, region, country without repeats).
+- `utils/badges.js`
+  - `BADGES`: First Stamp (1 visited), Explorer (10), Type Collector (5 distinct types), Globetrotter (3 distinct countries), Continental (2 distinct continents via `COUNTRIES.continent`), Micro Fan (5 micro). Each has `{ id, name, icon, description, target, measure(visited) }`.
+  - `computeBadges(visited)` → `[{ id, name, description, icon, unlocked, progress, target }]` (progress capped at target).
+  - `distinctCount(items, pick)`: number of different non-empty values, case-insensitive.
+
+### Context
+- `context/CollectionContext.jsx`: `CollectionProvider` (wraps App inside ThemeProvider in main.jsx) and `useCollection()` → `{ trail, visited, addToTrail(brewery), removeFromTrail(id), clearTrail(), isInTrail(id), toggleVisited(brewery), isVisited(id) }`.
+  - Stores a small copy per brewery: `{ id, name, brewery_type, city, state_province, country, latitude, longitude }` (coordinates as Number or null).
+  - `useState` lazy initialisers read localStorage once; `useEffect` saves on change. Keys `brewscope-trail` and `brewscope-visited`; `load`/`save` are wrapped in try/catch (blocked storage or broken JSON → empty list). Trail order = insertion order (planRoute starts from the first stop).
+
+### Components
+- `TrailMap.jsx`: `{ stops, height = 420 }` where stops are already route-ordered with coordinates. ThemedTileLayer + MapViewController (fits to the route), dashed brand-colour `Polyline` in route order, numbered `CircleMarker`s (number = permanent centred Tooltip), popup with name, TypeBadge, place and details link. Longitudes are "unwrapped" (±360°) so legs across the Pacific are drawn the short way, matching Haversine.
+- `RouletteButton.jsx`: no props. "🎲 Take me somewhere" → `getRandomBrewery()` (min 600 ms "Spinning…" with a spinning die) → `navigate('/brewery/:id')`. Inline `role="alert"` error on failure; aborts on unmount. Placed in the World hero CTAs and the Explore PageHeader actions.
+- `Navbar.jsx`: count pill on the Trail link (`trail.length`, hidden when 0) with visually hidden "N stops" text for screen readers.
+
+### Pages
+- `Brewery.jsx`: "🧭 Add to Trail" ↔ "🧭 In your trail ✓ (remove)" and "🏅 Mark as visited" ↔ "🏅 Visited ✓", plus a status line with links to Trail and Passport. Nothing else changed.
+- `Trail.jsx`: empty state (how to add + Explore link); StatCards (stops, total distance, longest leg, countries); ordered stop list from `planRoute` (number, name link, TypeBadge, place, "x km from previous stop", Remove); `Clear trail` (confirm) in the PageHeader; TrailMap inside ChartCard with a text summary; separate "No coordinates: not included in the route" list.
+- `Passport.jsx`: StatCards (visited, countries, types, badges unlocked); stamps grid (dashed card in the type colour via a `--stamp` custom property, country code seal, name, city/country, TypeBadge, link to the brewery); EmptyState with Explore link; badges grid from `computeBadges` (unlocked highlighted, locked greyed with an ARIA progressbar and "2/3").
+- `Compare.jsx`: two COUNTRIES selects (defaults Germany vs Australia) synced to `?a=&b=` with `useSearchParams` (invalid slugs fall back to defaults), swap button, "Copy link". Two separate `useFetch(getBreweryMeta({ by_country }))` calls so each side loads/fails/retries independently; when both are the same country, side B reuses side A (no duplicate request). Per side: StatCards (total, regions, most common type with %, closed share), TypeDonutChart and top-5 regions BarRankChart (click → region page) in ChartCards. Automatic insight from the numbers, e.g. "Germany has 2.8x more breweries than Australia (1,445 vs 514). Germany is mostly brewpubs (86%), while Australia is mostly micro breweries (96%)."; handles same-country, equal totals, zero totals and same top type.
+- `About.jsx`: description, feature cards, tech stack, API + OSM credits, team table, Research answers (useFetch; BreweryCard/ChartCard; ErrorState/EmptyState/skeletons).
+
+### Delivery
+- `.github/workflows/ci.yml` ("CI"): on `pull_request` and `push` to `main`; ubuntu-latest; checkout@v4; setup-node@v4 (Node 20, npm cache); `npm ci`; `npm run build`.
+- `README.md`: features, screenshot placeholders (`docs/world.png`, `docs/explore.png`, `docs/country.png`, `docs/trail.png`), run locally, structure, how the Brew Trail works, Research, credits, CI note.
+
+### Notes
+- CSS order: `main.jsx` imports `index.css` after `App`, so global classes like `.card` win over a module class of equal specificity. To override `.card` borders/backgrounds in a module, use `:global(.card).yourClass` (done in Passport and Compare).
+- `ComingSoon.jsx` is now unused; it was left in place (Part 1 file).

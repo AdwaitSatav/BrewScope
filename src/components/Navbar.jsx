@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext.jsx'
+import { useCollection } from '../context/CollectionContext.jsx'
 import styles from './Navbar.module.css'
 
 const links = [
@@ -14,6 +15,7 @@ const links = [
 
 export default function Navbar() {
   const { theme, toggleTheme } = useTheme()
+  const { trail } = useCollection()
   const [menuOpen, setMenuOpen] = useState(false)
   const { pathname } = useLocation()
 
@@ -37,6 +39,12 @@ export default function Navbar() {
             <NavLink key={link.to} to={link.to} end={link.to === '/'} className={linkClass}>
               <span className={styles.icon} aria-hidden="true">{link.icon}</span>
               {link.label}
+              {link.to === '/trail' && trail.length > 0 && (
+                <>
+                  <span className={styles.count} aria-hidden="true">{trail.length}</span>
+                  <span className={styles.srOnly}>, {trail.length} {trail.length === 1 ? 'stop' : 'stops'}</span>
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
