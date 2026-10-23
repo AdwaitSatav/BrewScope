@@ -1,0 +1,35 @@
+.page { display: grid; gap: 1.5rem; min-width: 0; }
+.heading { font-size: 1.25rem; margin-bottom: 1rem; }
+.intro { display: grid; gap: .75rem; }
+.intro h2 { font-size: 1.25rem; }
+.intro p { max-width: 75ch; }
+.link { color: var(--link); font-weight: 600; border-radius: 4px; }
+.link:hover { text-decoration: underline; }
+
+.features { list-style: none; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.feature { display: grid; align-content: start; gap: .4rem; min-width: 0; overflow-wrap: anywhere; }
+.feature h3 { font-size: 1.05rem; }
+.feature p { font-size: .9rem; }
+.featureIcon { font-size: 1.6rem; }
+.featureLink { border-radius: 4px; }
+.featureLink:hover { color: var(--link); text-decoration: underline; }
+
+.columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.columns p { overflow-wrap: anywhere; }
+.stack { list-style: none; display: flex; flex-wrap: wrap; gap: .5rem; }
+.stack li { font-size: .85rem; padding: .3rem .75rem; color: var(--text); }
+
+.tableWrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.table th, .table td { text-align: left; vertical-align: top; padding: .65rem .75rem; border-bottom: 1px solid var(--border); }
+.table thead th { color: var(--text-muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+.table tbody tr:last-child > * { border-bottom: 0; }
+.table td:first-child { color: var(--brand-strong); font-weight: 700; }
+
+.research { display: grid; gap: 1rem; }
+.research article { display: grid; gap: .75rem; max-width: 85ch; overflow-wrap: anywhere; }
+.research h3 { font-size: 1.1rem; }
+.research code { font-size: .85em; padding: .05rem .35rem; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); }
+
+@media (max-width: 800px) { .columns { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) { .table th, .table td { padding: .55rem .4rem; } }

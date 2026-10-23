@@ -1,0 +1,19 @@
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 1rem; align-items: start; }
+.listCard { display: grid; gap: 1rem; min-width: 0; }
+.listHead h2 { font-size: 1.15rem; }
+.listHead p { font-size: .85rem; margin-top: .2rem; }
+.stops { list-style: none; display: grid; gap: .75rem; }
+.stop { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: .75rem; padding-bottom: .75rem; border-bottom: 1px solid var(--border); }
+.stop:last-child { border-bottom: 0; padding-bottom: 0; }
+.number { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-family: var(--font-display); font-weight: 700; font-size: .9rem; }
+.unmapped { background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border); }
+.info { display: grid; gap: .3rem; min-width: 0; overflow-wrap: anywhere; font-size: .85rem; }
+.name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--text); border-radius: 4px; }
+.name:hover { color: var(--link); text-decoration: underline; }
+.leg { color: var(--brand-strong); font-weight: 600; }
+.remove { padding: .35rem .8rem; font-size: .8rem; }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 420px) {
+  .stop { grid-template-columns: auto minmax(0, 1fr); }
+  .remove { grid-column: 2; justify-self: start; }
+}

@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getBrewery, listBreweries } from '../api/breweries.js'
 import { getTypeInfo } from '../constants/breweryTypes.js'
 import useFetch from '../hooks/useFetch.js'
+import { useCollection } from '../context/CollectionContext.jsx'
 import PageHeader from '../components/PageHeader.jsx'
 import Breadcrumbs from '../components/Breadcrumbs.jsx'
 import TypeBadge from '../components/TypeBadge.jsx'
@@ -37,6 +38,9 @@ export default function Brewery() {
     const results = await listBreweries({ by_dist: `${lat},${lng}` }, { perPage: 7, signal })
     return results.filter((item) => item.id !== id).slice(0, 6)
   }, [id, lat, lng])
+  const { addToTrail, removeFromTrail, isInTrail, toggleVisited, isVisited } = useCollection()
+  const inTrail = isInTrail(id)
+  const visited = isVisited(id)
 
   if (loading) {
     return <>
@@ -99,9 +103,16 @@ export default function Brewery() {
             <div><dt>Coordinates</dt><dd>{hasCoords ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` : 'Not available'}</dd></div>
           </dl>
           <div className={styles.actions}>
-            <button type="button" className="btn" disabled title="Coming in Part 4" aria-describedby="part4-note">🧭 Add to Trail</button>
-            <button type="button" className="btn btn-ghost" disabled title="Coming in Part 4" aria-describedby="part4-note">🏅 Mark as visited</button>
-            <p id="part4-note" className="muted">Coming in Part 4</p>
+            <button type="button" className="btn" onClick={() => (inTrail ? removeFromTrail(brewery.id) : addToTrail(brewery))}>
+              {inTrail ? '🧭 In your trail ✓ (remove)' : '🧭 Add to Trail'}
+            </button>
+            <button type="button" className="btn btn-ghost" onClick={() => toggleVisited(brewery)}>
+              {visited ? '🏅 Visited ✓' : '🏅 Mark as visited'}
+            </button>
+            <p className="muted" role="status">
+              {inTrail || visited ? 'Saved in this browser. ' : 'Plan a route or collect a stamp. '}
+              <Link to="/trail" style={{ color: 'var(--link)' }}>View trail</Link> · <Link to="/passport" style={{ color: 'var(--link)' }}>View passport</Link>
+            </p>
           </div>
         </section>
 
