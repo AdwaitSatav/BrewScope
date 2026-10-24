@@ -21,14 +21,6 @@ A React dashboard that turns live data from the [Open Brewery DB](https://www.op
 | 🎲 | **Roulette** | "Take me somewhere": opens a random brewery anywhere on Earth | 4 |
 | 🌙 | **Light / dark mode** | Saved theme, no flash on load, charts and maps follow the theme | 1 + 3 |
 
-## Screenshots
-> Screenshots go in the `docs/` folder (replace these placeholders).
-
-| World | Explore |
-|---|---|
-| ![World view](docs/world.png) | ![Explore](docs/explore.png) |
-| **Country drill-down** | **Brew Trail** |
-| ![Country page](docs/country.png) | ![Brew Trail](docs/trail.png) |
 
 ## Run locally
 Requires Node.js 18+ (CI uses Node 20).
